@@ -10,7 +10,7 @@ void Inputs();
 void Start();
 void Logica();
 //Vamos a crear un enum para controlar los tiles del mapa
-enum MAP_TILES { EMPTY = ' ', WALL = '#', POINT = '.' };
+enum MAP_TILES { EMPTY = ' ', WALL = '#', POINT = '*' };
 //Ahora vamos a crear lo que seria el mapa mediante una array bidimensional
 MAP_TILES CosoleScreen[CONSOLE_HEIGHT][CONSOLE_WIDTH];
 //Enum para los imputs
@@ -23,7 +23,9 @@ int personaje_xPos = 10;
 int personaje_yPos = 5;
 //Bool para controlar el bucle del programa
 bool run = true;
-
+//Var Contador de muntos
+int map_points = 0;
+int player_points = 0;
 
 int main()
 {
@@ -64,11 +66,26 @@ void Logica()
 		run = false;
 		break;
 	}
+	//Crearemos el tp de personaje
+	if (personaje_xPos <= 0)
+	{
+		personaje_xPosN = CONSOLE_WIDTH - 1;
+	}
+	personaje_xPosN %= CONSOLE_WIDTH;
 	//Esta condición nos permitira decir que si nuestro personaje va a ir a una casilla que es un muro, este se quede donde esta
 	if (CosoleScreen[personaje_yPosN][personaje_xPosN] == MAP_TILES::WALL)
 	{
 		personaje_yPosN = personaje_yPos;
 		personaje_xPosN = personaje_xPos;
+	}
+	else if (CosoleScreen[personaje_yPosN][personaje_xPosN] == MAP_TILES::POINT)
+	{
+		//Aqui creamos el sistema de los puntos, por ejemplo, Actualizamos contadores y eliminamos los puntos 
+		map_points--;
+		player_points++;
+		CosoleScreen[personaje_yPosN][personaje_xPosN] = MAP_TILES::EMPTY;
+
+
 	}
 	personaje_yPos = personaje_yPosN;
 	personaje_xPos = personaje_xPosN;
@@ -91,8 +108,25 @@ void RellenarMapa()
 			}
 		}
 
-	}
+		//Vamos a hacer los tp, por lo que tendremos que vaciar un segmento de las esquinas del mapa
 
+		CosoleScreen[12][0] = MAP_TILES::EMPTY;
+		CosoleScreen[13][0] = MAP_TILES::EMPTY;
+		CosoleScreen[14][0] = MAP_TILES::EMPTY;
+		CosoleScreen[15][0] = MAP_TILES::EMPTY;
+		CosoleScreen[12][CONSOLE_WIDTH - 1] = MAP_TILES::EMPTY;
+		CosoleScreen[13][CONSOLE_WIDTH - 1] = MAP_TILES::EMPTY;
+		CosoleScreen[14][CONSOLE_WIDTH - 1] = MAP_TILES::EMPTY;
+		CosoleScreen[15][CONSOLE_WIDTH - 1] = MAP_TILES::EMPTY;
+
+	}
+	//Tendremos que crear los puntos en el mapa en esta función de aqui
+	CosoleScreen[1][1] = MAP_TILES::POINT;
+	CosoleScreen[27][1] = MAP_TILES::POINT;
+	CosoleScreen[1][117] = MAP_TILES::POINT;
+	CosoleScreen[27][117] = MAP_TILES::POINT;
+	//Contamos los puntos que va a tener el mapa
+	map_points = 4;
 }
 void Inputs() {
 	//Dato Curioso: Variables Locales en azul, variables globales blancas
