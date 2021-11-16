@@ -39,9 +39,13 @@ int main()
 		Logica();
 		ImprimirPantalla();
 	}
-	cout << "El PacMan se va a cerrar" << endl;
+	//Imprimimos los datos y finalizamos el juego.
+	system("CLS");
+	cout << "Has logrado recolectar la siguiente cantidad de puntos: " << player_points << " gracias por haber jugado :)" << endl;
 }
+//Creamos esta función para que nada mas empezar el programa nos haga estas dos cosas
 void Start() {
+	
 	RellenarMapa();
 	ImprimirPantalla();
 }
@@ -50,6 +54,7 @@ void Logica()
 	//Vamos a crear la colisión para ello tenemos que saber donde estamos 
 	int personaje_yPosN = personaje_yPos;
 	int personaje_xPosN = personaje_xPos;
+	//Aqui modificamos la posicion con los enum
 	switch (input)
 	{
 	case UP:
@@ -66,6 +71,7 @@ void Logica()
 		break;
 	case QUIT:
 		run = false;
+
 		break;
 	}
 	//Crearemos el tp de personaje
@@ -89,6 +95,7 @@ void Logica()
 
 
 	}
+	//Aqui terminamos de igualar nuestra posición con la posicion que hemos estado operando
 	personaje_yPos = personaje_yPosN;
 	personaje_xPos = personaje_xPosN;
 }
@@ -144,9 +151,10 @@ void SetPuntos()
 }
 
 void Inputs() {
-	//Dato Curioso: Variables Locales en azul, variables globales blancas
+	//Dato Curioso: Variables Locales en azul, variables globales blancas 
 	char input_local;
 	cin >> input_local;
+	//Este switch lo utilizamos para el Enum de USER_INPUT, lo modificamos para posteriormente trabajar con el 
 	switch (input_local)
 	{
 	case 'W':
@@ -175,6 +183,7 @@ void Inputs() {
 	}
 }// Esta función he decidido crearla para que nos devuelva si hemos recojido todas los puntos para poder detectar el final del juego
 bool GameFinish() {
+	//Siempre y cuando haya puntos en el mapa esta funcion nos devuelve false
 	if (map_points == 0)
 	{
 		return true;
@@ -185,6 +194,7 @@ bool GameFinish() {
 	}
 
 }
+//Esta Función De Aqui lo que va a hacer es mostrar el mapa, el personaje, los puntos y terminamos el juego
 void ImprimirPantalla()
 {
 	if (!GameFinish())
@@ -210,8 +220,7 @@ void ImprimirPantalla()
 	}
 	else
 	{
-		system("CLS");
-		cout << "Has logrado recolectar la siguiente cantidad de puntos: " << player_points << " gracias por haber jugado" << endl;
+		run = false;
 	}
 }
 //Trabajo PacMan_JonDeLaCruz
