@@ -9,6 +9,8 @@ void RellenarMapa();
 void Inputs();
 void Start();
 void Logica();
+void SetPuntos();
+bool GameFinish();
 //Vamos a crear un enum para controlar los tiles del mapa
 enum MAP_TILES { EMPTY = ' ', WALL = '#', POINT = '*' };
 //Ahora vamos a crear lo que seria el mapa mediante una array bidimensional
@@ -67,7 +69,7 @@ void Logica()
 		break;
 	}
 	//Crearemos el tp de personaje
-	if (personaje_xPos <= 0)
+	if (personaje_xPos < 0)
 	{
 		personaje_xPosN = CONSOLE_WIDTH - 1;
 	}
@@ -120,14 +122,27 @@ void RellenarMapa()
 		CosoleScreen[15][CONSOLE_WIDTH - 1] = MAP_TILES::EMPTY;
 
 	}
+	//Simplemente he creado una función para tenerlo un poco mas ordenado y que entre mejor a la vista
+	SetPuntos();
+}
+void SetPuntos()
+{
 	//Tendremos que crear los puntos en el mapa en esta función de aqui
 	CosoleScreen[1][1] = MAP_TILES::POINT;
+	CosoleScreen[1][46] = MAP_TILES::POINT;
+	CosoleScreen[10][70] = MAP_TILES::POINT;
+	CosoleScreen[15][15] = MAP_TILES::POINT;
 	CosoleScreen[27][1] = MAP_TILES::POINT;
+	CosoleScreen[27][56] = MAP_TILES::POINT;
 	CosoleScreen[1][117] = MAP_TILES::POINT;
+	CosoleScreen[17][98] = MAP_TILES::POINT;
+	CosoleScreen[19][101] = MAP_TILES::POINT;
 	CosoleScreen[27][117] = MAP_TILES::POINT;
+
 	//Contamos los puntos que va a tener el mapa
-	map_points = 4;
+	map_points = 10;
 }
+
 void Inputs() {
 	//Dato Curioso: Variables Locales en azul, variables globales blancas
 	char input_local;
@@ -158,25 +173,45 @@ void Inputs() {
 		input = USER_INPUT::NONE;
 		break;
 	}
+}// Esta función he decidido crearla para que nos devuelva si hemos recojido todas los puntos para poder detectar el final del juego
+bool GameFinish() {
+	if (map_points == 0)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+
 }
 void ImprimirPantalla()
 {
-	system("CLS");
-	for (int i = 0; i < CONSOLE_HEIGHT; i++)
+	if (!GameFinish())
 	{
-		for (int j = 0; j < CONSOLE_WIDTH; j++)
+		system("CLS");
+		for (int i = 0; i < CONSOLE_HEIGHT; i++)
 		{
-			if (personaje_xPos == j && personaje_yPos == i)
+			for (int j = 0; j < CONSOLE_WIDTH; j++)
 			{
-				cout << personaje;
+				if (personaje_xPos == j && personaje_yPos == i)
+				{
+					cout << personaje;
+				}
+				else
+				{
+					//ALERTA: si no lo transformamos a char nos dara numeros por el enum
+					cout << (char)CosoleScreen[i][j];
+				}
 			}
-			else
-			{
-				//ALERTA: si no lo transformamos a char nos dara numeros por el enum
-				cout << (char)CosoleScreen[i][j];
-			}
+			cout << endl;
 		}
-		cout << endl;
+		cout << "Puntos: " << player_points << endl;
+	}
+	else
+	{
+		system("CLS");
+		cout << "Has logrado recolectar la siguiente cantidad de puntos: " << player_points << " gracias por haber jugado" << endl;
 	}
 }
 //Trabajo PacMan_JonDeLaCruz
